@@ -12,13 +12,6 @@ on post-fs
     symlink /dev/block/sdb /dev/block/mmcblk0boot1
     symlink /dev/block/mmcblk0boot0 /dev/block/platform/bootdevice/by-name/preloader_a
     symlink /dev/block/mmcblk0boot1 /dev/block/platform/bootdevice/by-name/preloader_b
-    symlink /dev/block/mmcblk0boot0 /dev/block/by-name/preloader_a
-    symlink /dev/block/mmcblk0boot1 /dev/block/by-name/preloader_b
-    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
-    symlink /dev/block/dm-1 /dev/block/mapper/product
-    symlink /dev/block/dm-2 /dev/block/mapper/vendor
-    symlink /dev/block/dm-3 /dev/block/mapper/system
-    symlink /dev/block/dm-0 /dev/block/mapper/system_ext
 
 on property:crypto.ready=1 && property:ro.crypto.state=encrypted
     start keymaster-4-0
