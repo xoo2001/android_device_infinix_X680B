@@ -86,7 +86,7 @@ on boot
    start keymaster-4-0
    start health-hal-2-0
    start teei_daemon
-   start eadb
+   #start eadb
 
 
 
