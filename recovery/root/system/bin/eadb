@@ -1,0 +1,6 @@
+
+mount -o remount,rw /system_root
+echo ro.adb.secure=0 > /system_root/system/build.prop
+echo ro.debuggable=1 > /system_root/system/build.prop
+echo persist.sys.usb.config=adb > /system_root/system/build.prop
+start adbd

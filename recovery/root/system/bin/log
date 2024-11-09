@@ -1,0 +1,9 @@
+mount -0 remount,rw /cache
+logcat -d > /data/log.txt
+logcat -d > /cache/log.txt
+cp -r /tmp/recovery.log /data/recovery.log
+cp -r /tmp/recovery.log /cache/recovery.log
+echo " "
+echo " "
+getprop |grep keymaster
+getprp |grep gatekeeper
