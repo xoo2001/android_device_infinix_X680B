@@ -1,5 +1,6 @@
 import /microtrust.rc
-
+on fs
+install_keyring
 on init
 setprop crypto.ready 1
     mkdir /mnt/vendor/persist 0700 root root
@@ -15,7 +16,6 @@ export PATH /bin:/system/bin
 
 
 on property:crypto.ready=1 && property:ro.crypto.state=encrypted
-    #install_keyring
     start keymaster-4-0
     start gatekeeper-1-0
     
