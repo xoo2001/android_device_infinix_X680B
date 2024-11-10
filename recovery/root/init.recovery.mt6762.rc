@@ -15,7 +15,7 @@ export PATH /bin:/system/bin
 
 
 on property:crypto.ready=1 && property:ro.crypto.state=encrypted
-    #install_keyring
+    install_keyring
     start keymaster-4-0
     start gatekeeper-1-0
     
