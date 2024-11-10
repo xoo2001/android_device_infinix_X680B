@@ -36,5 +36,4 @@ PRODUCT_PACKAGES += \
     update_engine_sideload
 
 PRODUCT_EXTRA_RECOVERY_KEYS += \
-    $(LOCAL_PATH)/security/infinix.x509.pem \
-     $(LOCAL_PATH)/security/infinix
+ $(LOCAL_PATH)/security/infinix
