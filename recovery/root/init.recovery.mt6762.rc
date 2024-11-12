@@ -1,6 +1,6 @@
 import /microtrust.rc
 on fs
-install_keyring
+installkey /data
 on init
 setprop crypto.ready 1
     mkdir /mnt/vendor/persist 0700 root root
