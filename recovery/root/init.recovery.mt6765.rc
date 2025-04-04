@@ -74,7 +74,6 @@ on property:twrp.all.users.decrypted=true
     stop gatekeeper-1-0
 
 on boot
-   install_keyring
    start gatekeeper-1-0
    start keymaster-4-0
    start health-hal-2-0
