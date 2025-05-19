@@ -1,42 +1,47 @@
+#
+# Copyright (C) 2020 The Android Open Source Project
+# Copyright (C) 2020 The TWRP Open Source Project
+# Copyright (C) 2020 SebaUbuntu's TWRP device tree generator
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
 DEVICE_PATH := device/infinix/X680B
-# For building with minimal manifest
-ALLOW_MISSING_DEPENDENCIES := true
 
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_ABI2 := 
+TARGET_CPU_ABI2 :=
 TARGET_CPU_VARIANT := generic
-TARGET_CPU_VARIANT_RUNTIME := cortex-a53
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv7-a-neon
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := generic
-TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53
 TARGET_BOARD_SUFFIX := _64
+
 TARGET_USES_64_BIT_BINDER := true
 
-
-
-
-# Assert
-TARGET_OTA_ASSERT_DEVICE := X680B
-
-# Bootloader"
-TARGET_BOOTLOADER_BOARD_NAME := 
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME :=
 TARGET_NO_BOOTLOADER := true
 
 # Platform
 TARGET_BOARD_PLATFORM := mt6762
 
-TARGET_SCREEN_DENSITY := 320
-
-#MTK
-BOARD_USES_MTK_HARDWARE := true
-
+# Kernel
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 BOARD_BOOTIMG_HEADER_VERSION := 2
 BOARD_KERNEL_BASE := 0x40078000
@@ -61,97 +66,74 @@ BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
 BOARD_MKBOOTIMG_ARGS += --board $(BOARD_NAME)
-#AVB
-BOARD_AVB_ENABLE := true
-BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
-BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
-BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA2048
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
-BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
-#partition
-BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+# Android Verified Boot
+BOARD_AVB_ENABLE := true
+BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := Infinix-X680B
+
+# Partition
+BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_BOOTIMAGE_PARTITION_SIZE := 40894464
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 40894464
-BOARD_HAS_LARGE_FILESYSTEM := true
-BOARD_SYSTEMIMAGE_PARTITION_TYPE := ext4
-BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := ext4
+BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
+BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+TARGET_USERIMAGES_USE_F2FS := true
+TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_COPY_OUT_VENDOR := vendor
+
+# Dynamic Partition
 BOARD_SUPER_PARTITION_SIZE := 9122611200
 BOARD_SUPER_PARTITION_GROUPS := main
-BOARD_MAIN_SIZE := 9122611200
+BOARD_MAIN_SIZE := 5142216704
 BOARD_MAIN_PARTITION_LIST := system vendor product
-TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
 
 # System as root
 BOARD_SUPPRESS_SECURE_ERASE := true
 
-# Recovery
-
-# Crypto
-#TW_INCLUDE_CRYPTO := true
-#TW_INCLUDE_CRYPTO_FBE := true
-BOARD_USES_METADATA_PARTITION := true
-TW_USE_FSCRYPT_POLICY := 2
-#TW_INCLUDE_FBE_METADATA_DECRYPT := true
-
-
-# # Hack: prevent anti roll back
+# Hack: prevent anti roll back
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := 2099-12-31
-PLATFORM_VERSION := 99.87.36
-PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
+PLATFORM_VERSION := 16.1.0
+TW_INCLUDE_CRYPTO := true
 
-BOARD_ROOT_EXTRA_FOLDERS += metadata
-    
-    
-    
-# Properties
-#TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
-TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
+# Additional binaries & libraries needed for recovery
+TARGET_RECOVERY_DEVICE_MODULES += \
+    libkeymaster4 \
+    libpuresoftkeymasterdevice \
+    ashmemd_aidl_interface-cpp \
+    libashmemd_client
 
-# ADDING LOG
-TARGET_USES_LOGD := true
-TWRP_INCLUDE_LOGCAT := true
+TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/ashmemd_aidl_interface-cpp.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libashmemd_client.so
 
-## TWRP-Specific configuration
+# Recovery
+BOARD_HAS_NO_SELECT_BUTTON := true
+
+# TWRP Configuration
 TW_THEME := portrait_hdpi
-RECOVERY_SDCARD_ON_DATA := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /dev/block/loop%d
-TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
-TW_DEFAULT_BRIGHTNESS := 1200
+TW_EXTRA_LANGUAGES := true
+TW_SCREEN_BLANK_ON_BOOT := true
+TW_BRIGHTNESS_PATH := /sys/class/leds/lcd-backlight/brightness
 TW_MAX_BRIGHTNESS := 2047
+TW_DEFAULT_BRIGHTNESS := 1200
+TW_EXCLUDE_DEFAULT_USB_INIT := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_INCLUDE_NTFS_3G := true
 TW_Y_OFFSET := 80
 TW_H_OFFSET := -80
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_EXCLUDE_PYTHON := true
-TW_EXCLUDE_NANO := true
-TW_EXCLUDE_TWRPAPP := true
-TW_EXTRA_LANGUAGES := true
-TW_INCLUDE_NTFS_3G := true
-TW_NO_SCREEN_BLANK := true
-TW_SCREEN_BLANK_ON_BOOT := true
-TW_INCLUDE_REPACKTOOLS := true
-TW_HAS_MTP := true
-TW_INCLUDE_RESETPROP := true
-TW_EXCLUDE_APEX := true
-# Maintainer/Version
-TW_DEVICE_VERSION := infinix-X680B-Massatrio16
 
-    
-TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4 \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4.so \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster4support.so \
-$(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice \
-$(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
-$(TARGET_OUT_SHARED_LIBRARIES)/libTEECommon \
-$(TARGET_OUT_SHARED_LIBRARIES)/libTEECommon.so \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster_messages \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster_messages.so \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster_portable \
-$(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster_portable.so \
+# Exclude
+TW_EXCLUDE_TWRP_APP := true
+
+# Logcat
+TWRP_INCLUDE_LOGCAT := true
+TARGET_USES_LOGD := true
+
+TW_DEVICE_VERSION := xoo2001

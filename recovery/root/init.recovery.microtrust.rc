@@ -1,7 +1,5 @@
-
-
 # For MTK DRM integration:
-service teei_daemon /system/bin/teei_daemon \
+service teei_daemon /vendor/bin/teei_daemon \
     -r 020b0000000000000000000000000000 \
     -r 020f0000000000000000000000000000 \
     -r 06090000000000000000000000000000 \
@@ -20,11 +18,10 @@ service teei_daemon /system/bin/teei_daemon \
     -r 98fb95bcb4bf42d26473eae48690d7ea \
     -r 7b66512021214487ba710a51d7ea78fe \
     -r 09010000000000000000000000000000
-        user root
+    user root
     group root
     disabled
-   # oneshot
-seclabel u:r:recovery:s0
+    seclabel u:r:recovery:s0
 
 on boot
     chown system system /sys/bus/platform/devices/utos/dcih_notify_test
@@ -32,7 +29,8 @@ on boot
     chown system system /sys/bus/platform/devices/utos/load_ut_drv
     chown system system /sys/bus/platform/devices/utos/unload_ut_drv
     chown system system /sys/bus/platform/devices/utos/notify_ree_dci_handler
-#BSP:add XLLLHLWS-62 by lichen 20190924 start
+
+#for All mode
 on load_persist_props_action
     write /proc/bootprof "start teei cfg (on load_persist_props_action)"
     mkdir /data/vendor/thh
@@ -104,13 +102,9 @@ on load_persist_props_action
     chmod 0771 /data/vendor/key_provisioning
     chown system system /data/vendor/key_provisioning
     write /proc/bootprof "start teei cfg end (on load_persist_props_action)"
-#BSP:add XLLLHLWS-62 by lichen 20190924 end
 
-#BSP:modify KBBGHLESGQ-67 by wang.qin 20190719 start
-#for All mode
-#on load_persist_props_action
-on property:vold.decrypt=trigger_restart_framework
-    write /proc/bootprof "start teei cfg (on vold.decrypt=trigger_restart_framework)"
+on property:crypto.ready=1
+    write /proc/bootprof "start teei cfg (on trigger_restart_framework)"
     mkdir /data/vendor/thh
     mkdir /data/vendor/thh/system
     mkdir /data/vendor/thh/tee_00
@@ -179,8 +173,7 @@ on property:vold.decrypt=trigger_restart_framework
     restorecon_recursive /data/vendor/thh
     chmod 0771 /data/vendor/key_provisioning
     chown system system /data/vendor/key_provisioning
-    write /proc/bootprof "start teei cfg end (on vold.decrypt=trigger_restart_framework)"
-#BSP:modify KBBGHLESGQ-67 by wang.qin 20190719 end
+    write /proc/bootprof "start teei cfg end (on trigger_restart_framework)"
 
 on post-fs
     # Set /mnt/vendor/persist/rpmb
